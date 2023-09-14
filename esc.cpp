@@ -47,6 +47,11 @@ esc::esc(int pin, protocol protocol_t){
 void esc::init(){
     ledcSetup(channel,frequency, RESOLUTION);
     ledcAttachPin(pin,channel);
+<<<<<<< HEAD
+=======
+    ledcWrite(channel,max_value);
+    delay(5000);
+>>>>>>> 3eb8c09d5d1483258ef98052148d673ac9d5b321
     ledcWrite(channel,min_value);
 }
 
