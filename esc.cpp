@@ -32,8 +32,8 @@ esc::esc(int pin, protocol protocol_t){
 
     case MULTISHOT:
         frequency = 25000; // 40us
-        min_value = 399;
-        max_value = 799;
+        min_value = 127;
+        max_value = 639;
         break;
 
     default:
