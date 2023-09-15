@@ -32,8 +32,8 @@ esc::esc(int pin, protocol protocol_t){
 
     case MULTISHOT:
         frequency = 25000; // 40us
-        min_value = 128;
-        max_value = 640;
+        min_value = 128; // 5us
+        max_value = 640; //25us
         break;
 
     default:
@@ -45,11 +45,15 @@ esc::esc(int pin, protocol protocol_t){
 }
 
 void esc::init(){
+    #ifdef ESP32
     ledcSetup(channel,frequency, RESOLUTION);
     ledcAttachPin(pin,channel);
     ledcWrite(channel,min_value);
+    #endif
 }
 
-void esc::write(int value){
+void esc::write(float value){
+    #ifdef ESP32
     ledcWrite(channel,map(value,0,1023,min_value,max_value));
+    #endif
 }

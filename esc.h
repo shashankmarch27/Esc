@@ -19,13 +19,12 @@ private:
     int min_value;
     int max_value;
 
-
 public:
 
     esc(int pin, enum protocol);
 
     void init();
-    void write(int value);
+    void write(float value);
 };
 
 #endif
