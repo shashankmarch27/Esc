@@ -33,7 +33,7 @@ esc::esc(int pin, protocol protocol_t){
     case MULTISHOT:
         frequency = 25000; // 40us
         min_value = 128; // 5us
-        max_value = 640; //25us
+        max_value = 640; // 25us
         break;
 
     default:
@@ -45,15 +45,19 @@ esc::esc(int pin, protocol protocol_t){
 }
 
 void esc::init(){
-    #ifdef ESP32
+    #if defined(ESP32)
     ledcSetup(channel,frequency, RESOLUTION);
     ledcAttachPin(pin,channel);
     ledcWrite(channel,min_value);
+
+    #elif defined(ARDUINO_ARCH_RP2040)
     #endif
 }
 
 void esc::write(float value){
-    #ifdef ESP32
+    #if defined(ESP32)
     ledcWrite(channel,map(value,0,1023,min_value,max_value));
+
+    #elif defined(ARDUINO_ARCH_RP2040)
     #endif
 }
