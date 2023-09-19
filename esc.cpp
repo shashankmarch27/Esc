@@ -3,8 +3,11 @@
 
 int counter = 1;
 
-esc::esc(int pin, protocol protocol_t){
+esc::esc(int pin, protocol protocol_t ,bool mode){
     this->pin = pin;
+    this->mode = mode;
+    this->protocol_t = protocol_t;
+
     switch (protocol_t){
     case PWM:
         frequency = 50; // 20ms
@@ -40,6 +43,7 @@ esc::esc(int pin, protocol protocol_t){
         break;
     }
 
+    mid_value = (min_value + max_value) / 2;
     channel = counter;
     counter++;
 }
@@ -48,7 +52,12 @@ void esc::init(){
     #if defined(ESP32)
     ledcSetup(channel,frequency, RESOLUTION);
     ledcAttachPin(pin,channel);
-    ledcWrite(channel,min_value);
+    if(mode && (protocol_t == ONESHOT125)){
+        ledcWrite(channel,mid_value);
+    }
+    else{
+        ledcWrite(channel,min_value);
+    }
 
     #elif defined(ARDUINO_ARCH_RP2040)
     #endif

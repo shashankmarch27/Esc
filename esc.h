@@ -2,6 +2,8 @@
 #define ESC_H
 #include <Arduino.h>
 
+#define MODE_3D true
+
 enum protocol{
     PWM,
     FAST_PWM,
@@ -17,11 +19,14 @@ private:
     int frequency;
     int pin;
     int min_value;
+    int mid_value;
     int max_value;
+    bool mode;
+    protocol protocol_t;
 
 public:
 
-    esc(int pin, enum protocol);
+    esc(int pin, protocol protocol, bool mode = false);
 
     void init();
     void write(float value);
