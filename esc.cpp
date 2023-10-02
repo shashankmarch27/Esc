@@ -1,7 +1,9 @@
 #include "esc.h"
 #define RESOLUTION 10
 
+#if defined(ESP32)
 int counter = 1;
+#endif
 
 esc::esc(int pin, protocol protocol_t ,bool mode){
     this->pin = pin;
@@ -44,8 +46,11 @@ esc::esc(int pin, protocol protocol_t ,bool mode){
     }
 
     mid_value = (min_value + max_value) / 2;
+
+    #if defined(ESP32)
     channel = counter;
     counter++;
+    #endif
 }
 
 void esc::init(){
@@ -58,15 +63,19 @@ void esc::init(){
     else{
         ledcWrite(channel,min_value);
     }
-
-    #elif defined(ARDUINO_ARCH_RP2040)
+    
+    #elif defined(STM32F4xx)
+    pinMode(pin,OUTPUT);
+    analogWriteResolution(RESOLUTION);
     #endif
 }
 
 void esc::write(float value){
     #if defined(ESP32)
-    ledcWrite(channel,map(value,0,1023,min_value,max_value));
+    ledcWrite(channel,constrain(map(value,0,1023,min_value,max_value),min_value,max_value));
 
-    #elif defined(ARDUINO_ARCH_RP2040)
+    #elif defined(STM32F4xx)
+    analogWriteFrequency(frequency);
+    analogWrite(pin,constrain(map(value,0,1023,min_value,max_value),min_value,max_value));
     #endif
 }
